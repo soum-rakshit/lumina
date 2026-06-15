@@ -1,0 +1,78 @@
+generator client {
+  provider = "prisma-client-js"
+  engineType = "library"
+  previewFeatures = ["driverAdapters"]
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id                String    @id // Clerk user ID
+  email             String    @unique
+  xp                Int       @default(0)
+  streakDays        Int       @default(0)
+  lastCompletedDate DateTime? @db.Date
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  planners          Planner[]
+}
+
+model Planner {
+  id          String   @id @default(uuid())
+  userId      String
+  name        String
+  startDate   DateTime
+  endDate     DateTime
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tasks       Task[]
+}
+
+model Task {
+  id           String     @id @default(uuid())
+  plannerId    String
+  name         String
+  isCompulsory Boolean    @default(true)
+  weight       Float      @default(1.0) // 1.0 for compulsory, 0 for optional/extra credit
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  planner      Planner    @relation(fields: [plannerId], references: [id], onDelete: Cascade)
+  rules        TaskRule[]
+  logs         DailyLog[]
+}
+
+model TaskRule {
+  id          String   @id @default(uuid())
+  taskId      String
+  startDate   DateTime
+  endDate     DateTime
+  weekdays    Int[]    // Array of 0-6 (0=Sun, 1=Mon, ..., 6=Sat)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  task        Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
+}
+
+model DailyLog {
+  id          String   @id @default(uuid())
+  taskId      String
+  date        DateTime @db.Date // Date without time
+  status      String   @default("PENDING") // PENDING, COMPLETED, SKIPPED, OVERDUE
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  task        Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
+
+  @@unique([taskId, date])
+}
+
+// Extra tasks completed on a specific date (dynamically added)
+model ExtraLog {
+  id          String   @id @default(uuid())
+  userId      String
+  date        DateTime @db.Date
+  name        String
+  weightAdded Float    @default(0.2) // e.g., 20% boost
+  createdAt   DateTime @default(now())
+}
