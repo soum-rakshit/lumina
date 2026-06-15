@@ -38,6 +38,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     const shown = sessionStorage.getItem("motivation-shown");
     if (!shown) {
       const randomQuote = MOTIVATIONAL_QUOTES[Math.floor(Math.random() * MOTIVATIONAL_QUOTES.length)];
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setQuote(randomQuote);
       setShowMotivation(true);
       sessionStorage.setItem("motivation-shown", "true");

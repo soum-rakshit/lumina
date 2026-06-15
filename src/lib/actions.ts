@@ -32,7 +32,7 @@ export async function initUser() {
       const startDate = new Date();
       const endDate = addDays(startDate, 180);
       
-      const planner = await db.planner.create({
+      await db.planner.create({
         data: {
           userId,
           name: "Gate Planner",
@@ -136,8 +136,10 @@ export async function getTodayTasks(targetDateStr: string) {
     }
   });
 
-  let activeTasks: any[] = [];
-  let logs: any[] = [];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const activeTasks: any[] = [];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const logs: any[] = [];
   for (const planner of planners) {
     for (const task of planner.tasks) {
       const hasValidRule = task.rules.some(rule => 
@@ -182,7 +184,7 @@ export async function updateTaskStatus(taskId: string, dateStr: string, status: 
   if (becameCompleted || lostCompleted) {
     const user = await db.user.findUnique({ where: { id: userId } });
     if (user) {
-      let xpDelta = becameCompleted ? 1 : -1;
+      const xpDelta = becameCompleted ? 1 : -1;
       let newXp = Math.max(0, user.xp + xpDelta);
       let newStreak = user.streakDays;
       let newLastCompleted = user.lastCompletedDate;

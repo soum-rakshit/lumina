@@ -108,6 +108,17 @@ export function MonthCalendar({
   const monthEnd = endOfMonth(currentMonth);
   const daysInMonth = eachDayOfInterval({ start: monthStart, end: monthEnd });
 
+  async function loadData() {
+    try {
+      const data = await getTasksForMonth(monthStart, monthEnd);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      setPlanners(data as any);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoading(false);
+    }
+
   useEffect(() => {
     if (!initialPlanners) {
       loadData();
@@ -117,20 +128,12 @@ export function MonthCalendar({
   // Update when planners prop changes
   useEffect(() => {
     if (initialPlanners) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setPlanners(initialPlanners);
     }
   }, [initialPlanners]);
 
-  const loadData = async () => {
-    try {
-      const data = await getTasksForMonth(monthStart, monthEnd);
-      setPlanners(data as any);
-    } catch (e) {
-      console.error(e);
-    } finally {
-      setLoading(false);
-    }
-  };
+  }
 
   const handleDayHover = (day: Date, e: React.MouseEvent) => {
     const stats = computeDayStats(day, planners, filter, localStatuses);
@@ -266,6 +269,7 @@ export function TodayProgressSlider({ planners }: { planners?: PlannerData[] }) 
   useEffect(() => {
     if (planners) {
       const s = computeDayStats(new Date(), planners, "all", localStatuses);
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setTodayPct(s.totalTasks > 0 ? s.completedTasks / s.totalTasks : 0);
     }
   }, [planners, localStatuses]);
@@ -304,6 +308,7 @@ export function MobileCalendarDrawer({
   useEffect(() => {
     if (planners) {
       const s = computeDayStats(new Date(), planners, "all", localStatuses);
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setTodayPct(s.totalTasks > 0 ? s.completedTasks / s.totalTasks : 0);
     }
   }, [planners, localStatuses]);

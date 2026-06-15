@@ -4,14 +4,14 @@ import { create } from "zustand";
 import { getPlanners, getTodayTasks, initUser } from "@/lib/actions";
 
 type DataStore = {
-  planners: any[] | null;
-  stats: any | null;
-  dashboardData: { activeTasks: any[]; logs: any[] } | null;
+  planners: unknown[] | null;
+  stats: unknown | null;
+  dashboardData: { activeTasks: unknown[]; logs: unknown[] } | null;
   lastFetch: number;
   loading: boolean;
 
   fetchGlobalData: (force?: boolean) => Promise<void>;
-  updateStats: (newStats: any) => void;
+  updateStats: (newStats: unknown) => void;
 };
 
 export const useDataStore = create<DataStore>((set, get) => ({
@@ -39,7 +39,7 @@ export const useDataStore = create<DataStore>((set, get) => ({
         getTodayTasks(todayStr),
         initUser(),
       ]);
-      set({ planners: planners as any, dashboardData, stats, lastFetch: Date.now() });
+      set({ planners: planners as unknown, dashboardData, stats, lastFetch: Date.now() });
     } catch (e) {
       console.error(e);
     } finally {

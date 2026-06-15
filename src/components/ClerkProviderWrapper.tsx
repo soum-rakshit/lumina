@@ -11,7 +11,7 @@ export function ClerkProviderWrapper({ children }: { children: React.ReactNode }
   return (
     <ClerkProvider
       appearance={{
-        baseTheme: resolvedTheme === "dark" ? dark : undefined,
+        theme: resolvedTheme === "dark" ? dark : undefined,
         variables: {
           colorPrimary: '#4f46e5', // Indigo 600
         },
