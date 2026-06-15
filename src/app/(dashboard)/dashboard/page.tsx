@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import DailyLog from "@/components/DailyLog";
 import { useDataStore } from "@/lib/dataStore";
 import { useStatusStore } from "@/lib/statusStore";
@@ -8,7 +8,7 @@ import { motion } from "framer-motion";
 import { Flame, Zap } from "lucide-react";
 
 export default function DashboardPage() {
-  const { dashboardData, stats, loading, fetchGlobalData, planners } = useDataStore();
+  const { dashboardData, stats, loading, fetchGlobalData } = useDataStore();
   const { flush } = useStatusStore();
 
   // Trigger initial load if not yet cached
@@ -25,6 +25,7 @@ export default function DashboardPage() {
     };
     document.addEventListener("visibilitychange", handleVisibilityChange);
     return () => document.removeEventListener("visibilitychange", handleVisibilityChange);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const isLoading = loading || !dashboardData;

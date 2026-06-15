@@ -22,11 +22,10 @@ export type TaskLog = {
 export default function DailyLog({
   activeTasks,
   logs,
-  onStatusChange,
 }: {
   activeTasks: ActiveTask[];
   logs: TaskLog[];
-  onStatusChange: () => void;
+  onStatusChange?: () => void;
 }) {
   const { setStatus, getStatus, startAutoFlush } = useStatusStore();
 

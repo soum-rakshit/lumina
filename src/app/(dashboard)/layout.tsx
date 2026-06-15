@@ -46,6 +46,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
     // Seed global cache (no-op if already cached)
     fetchGlobalData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

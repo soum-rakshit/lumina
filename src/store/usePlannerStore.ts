@@ -64,7 +64,7 @@ export const usePlannerStore = create<PlannerStoreState>()(
         // Weight = Completed Compulsory / Total Compulsory + Extra Weights
       },
 
-      addExtraTask: (name, type) => {
+      addExtraTask: (name) => {
         const id = `extra-${Date.now()}`;
         set((state) => ({
           extraTasks: [...state.extraTasks, { id, name }],

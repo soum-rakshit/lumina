@@ -1,12 +1,12 @@
 "use client";
 
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect } from "react";
 import {
   format,
   startOfMonth,
   endOfMonth,
   eachDayOfInterval,
-  isSameDay,
+
   getDay,
 } from "date-fns";
 import { motion, AnimatePresence } from "framer-motion";
@@ -118,22 +118,23 @@ export function MonthCalendar({
     } finally {
       setLoading(false);
     }
+  }
 
+  /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
     if (!initialPlanners) {
       loadData();
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Update when planners prop changes
   useEffect(() => {
     if (initialPlanners) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setPlanners(initialPlanners);
     }
   }, [initialPlanners]);
-
-  }
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   const handleDayHover = (day: Date, e: React.MouseEvent) => {
     const stats = computeDayStats(day, planners, filter, localStatuses);

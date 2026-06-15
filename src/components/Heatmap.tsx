@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useMemo, useState } from "react";
-import { format, eachDayOfInterval, subDays, startOfToday, getDay } from "date-fns";
+import { format, eachDayOfInterval, subDays, startOfToday } from "date-fns";
 
 type DayData = {
   date: Date;

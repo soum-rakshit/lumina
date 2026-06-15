@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { Plus, Trash2, Save, Pencil, X, ChevronDown, ChevronUp } from "lucide-react";
+import React, { useState } from "react";
+import { Plus, Trash2, Save, Pencil, X } from "lucide-react";
 import { format, addDays } from "date-fns";
 import { motion, AnimatePresence } from "framer-motion";
 import { useDataStore } from "@/lib/dataStore";
