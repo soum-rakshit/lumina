@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { auth } from "@clerk/nextjs/server";
 import { db } from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
@@ -15,8 +16,8 @@ export async function POST(req: NextRequest) {
   let minStart = new Date();
   let maxEnd = new Date();
   
-  tasks?.forEach((t: unknown) => {
-    t.rules?.forEach((r: unknown) => {
+  tasks?.forEach((t: any) => {
+    t.rules?.forEach((r: any) => {
       if (r.startDate) {
         const s = new Date(r.startDate);
         if (s < minStart) minStart = s;
@@ -35,11 +36,11 @@ export async function POST(req: NextRequest) {
       startDate: minStart,
       endDate: maxEnd,
       tasks: {
-        create: (tasks || []).map((t: unknown) => ({
+        create: (tasks || []).map((t: any) => ({
           name: t.name || "Untitled Task",
           isCompulsory: t.isCompulsory ?? true,
           rules: {
-            create: (t.rules || []).map((r: unknown) => ({
+            create: (t.rules || []).map((r: any) => ({
               startDate: r.startDate ? new Date(r.startDate) : new Date(),
               endDate: r.endDate ? new Date(r.endDate) : new Date(),
               weekdays: r.weekdays || [1, 2, 3, 4, 5],
@@ -71,8 +72,8 @@ export async function PUT(req: NextRequest) {
   let minStart = new Date();
   let maxEnd = new Date();
 
-  tasks?.forEach((t: unknown) => {
-    t.rules?.forEach((r: unknown) => {
+  tasks?.forEach((t: any) => {
+    t.rules?.forEach((r: any) => {
       if (r.startDate) {
         const s = new Date(r.startDate);
         if (s < minStart) minStart = s;
@@ -85,12 +86,12 @@ export async function PUT(req: NextRequest) {
   });
 
   // Delete old tasks/rules (cascade will handle dailyLogs via onDelete: Cascade)
-  const oldTasks = await db.task.findMunknown({ where: { plannerId: id } });
+  const oldTasks = await db.task.findMany({ where: { plannerId: id } });
   for (const task of oldTasks) {
-    await db.dailyLog.deleteMunknown({ where: { taskId: task.id } });
-    await db.taskRule.deleteMunknown({ where: { taskId: task.id } });
+    await db.dailyLog.deleteMany({ where: { taskId: task.id } });
+    await db.taskRule.deleteMany({ where: { taskId: task.id } });
   }
-  await db.task.deleteMunknown({ where: { plannerId: id } });
+  await db.task.deleteMany({ where: { plannerId: id } });
 
   // Update planner and recreate tasks
   const planner = await db.planner.update({
@@ -100,11 +101,11 @@ export async function PUT(req: NextRequest) {
       startDate: minStart,
       endDate: maxEnd,
       tasks: {
-        create: (tasks || []).map((t: unknown) => ({
+        create: (tasks || []).map((t: any) => ({
           name: t.name || "Untitled Task",
           isCompulsory: t.isCompulsory ?? true,
           rules: {
-            create: (t.rules || []).map((r: unknown) => ({
+            create: (t.rules || []).map((r: any) => ({
               startDate: r.startDate ? new Date(r.startDate) : new Date(),
               endDate: r.endDate ? new Date(r.endDate) : new Date(),
               weekdays: r.weekdays || [1, 2, 3, 4, 5],
@@ -132,12 +133,12 @@ export async function DELETE(req: NextRequest) {
   if (!planner) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
   // Delete related records first
-  const tasks = await db.task.findMunknown({ where: { plannerId: id } });
+  const tasks = await db.task.findMany({ where: { plannerId: id } });
   for (const task of tasks) {
-    await db.dailyLog.deleteMunknown({ where: { taskId: task.id } });
-    await db.taskRule.deleteMunknown({ where: { taskId: task.id } });
+    await db.dailyLog.deleteMany({ where: { taskId: task.id } });
+    await db.taskRule.deleteMany({ where: { taskId: task.id } });
   }
-  await db.task.deleteMunknown({ where: { plannerId: id } });
+  await db.task.deleteMany({ where: { plannerId: id } });
   await db.planner.delete({ where: { id } });
 
   return NextResponse.json({ success: true });

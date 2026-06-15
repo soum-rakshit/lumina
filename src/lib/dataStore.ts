@@ -3,15 +3,16 @@
 import { create } from "zustand";
 import { getPlanners, getTodayTasks, initUser } from "@/lib/actions";
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
 type DataStore = {
-  planners: unknown[] | null;
-  stats: unknown | null;
-  dashboardData: { activeTasks: unknown[]; logs: unknown[] } | null;
+  planners: any[] | null;
+  stats: any | null;
+  dashboardData: { activeTasks: any[]; logs: any[] } | null;
   lastFetch: number;
   loading: boolean;
 
   fetchGlobalData: (force?: boolean) => Promise<void>;
-  updateStats: (newStats: unknown) => void;
+  updateStats: (newStats: any) => void;
 };
 
 export const useDataStore = create<DataStore>((set, get) => ({
