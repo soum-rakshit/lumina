@@ -1,5 +1,14 @@
 "use server";
 
+import { Prisma } from "@prisma/client";
+
+type TaskWithRulesAndLogs = Prisma.TaskGetPayload<{
+  include: {
+    rules: true;
+    logs: true;
+  };
+}>;
+
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { db } from "./db";
 import { revalidatePath } from "next/cache";
@@ -136,10 +145,9 @@ export async function getTodayTasks(targetDateStr: string) {
     }
   });
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const activeTasks: any[] = [];
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const logs: any[] = [];
+  const activeTasks: (TaskWithRulesAndLogs & { plannerName: string })[] = [];
+  // eslint-disable-next-line @typescript-eslint/no-empty-object-type
+  const logs: Prisma.DailyLogGetPayload<{}>[] = [];
   for (const planner of planners) {
     for (const task of planner.tasks) {
       const hasValidRule = task.rules.some(rule => 

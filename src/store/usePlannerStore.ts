@@ -1,6 +1,16 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { TaskItem, ExtraTaskItem } from "@/components/DailyLog";
+export type TaskItem = {
+  id: string;
+  name: string;
+  isCompulsory: boolean;
+  completed: boolean;
+};
+
+export type ExtraTaskItem = {
+  id: string;
+  name: string;
+};
 
 export type PlannerStoreState = {
   // We mock the seed planner state here for the frontend prototype
