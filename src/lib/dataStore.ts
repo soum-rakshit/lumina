@@ -40,7 +40,7 @@ export const useDataStore = create<DataStore>((set, get) => ({
         getTodayTasks(todayStr),
         initUser(),
       ]);
-      set({ planners: planners as unknown, dashboardData, stats, lastFetch: Date.now() });
+      set({ planners: planners as any, dashboardData, stats, lastFetch: Date.now() });
     } catch (e) {
       console.error(e);
     } finally {
